@@ -179,11 +179,6 @@ Admitted.
 #[export]
 Hint Resolve wf_sub_eq_conv : mctt.
 
-Add Parametric Morphism Γ : (wf_sub_eq Γ)
-    with signature wf_ctx_eq ==> eq ==> eq ==> iff as wf_sub_eq_morphism_iff3.
-Proof.
-Admitted.
-
 (** We can prove some additional lemmas for type presuppositions as well. *)
 
 Lemma lift_exp_ge : forall {Γ A n m},

@@ -1,4 +1,4 @@
-From Stdlib Require Export Equivalence Lia Morphisms Program.Equality Program.Tactics Relation_Definitions RelationClasses.
+From Stdlib Require Export Equivalence Program.Equality Program.Tactics.
 
 Open Scope predicate_scope.
 
