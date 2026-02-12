@@ -1,4 +1,94 @@
-From Stdlib Require Export Equivalence Program.Equality Program.Tactics.
+From Corelib Require Export Equivalence Program.Tactics.
+
+Module Program_Equality.
+
+Axiom UIP_refl : forall (U : Type) (x : U) (p : x = x), p = eq_refl.
+Axiom UIP : forall (U : Type) (x y : U) (p1 p2 : x = y), p1 = p2.
+
+Ltac elim_eq_rect :=
+  match goal with
+    | [ |- ?t ] =>
+      match t with
+        | context [ @eq_rect _ _ _ _ _ ?p ] =>
+          let P := fresh "P" in
+            set (P := p); simpl in P ;
+              ((case P ; clear P) || (clearbody P; rewrite (UIP_refl _ _ P); clear P))
+        | context [ @eq_rect _ _ _ _ _ ?p _ ] =>
+          let P := fresh "P" in
+            set (P := p); simpl in P ;
+              ((case P ; clear P) || (clearbody P; rewrite (UIP_refl _ _ P); clear P))
+      end
+  end.
+
+Ltac simpl_uip :=
+  match goal with
+    [ H : ?X = ?X |- _ ] => rewrite (UIP_refl _ _ H) in *; clear H
+  end.
+
+Ltac abstract_eq_hyp H' p :=
+  let ty := type of p in
+  let tyred := eval simpl in ty in
+    match tyred with
+      ?X = ?Y =>
+      match goal with
+        | [ H : X = Y |- _ ] => fail 1
+        | _ => set (H':=p) ; try (change p with H') ; clearbody H' ; simpl in H'
+      end
+    end.
+
+Ltac on_coerce_proof tac T :=
+  match T with
+    | context [ eq_rect _ _ _ _ ?p ] => tac p
+  end.
+
+Ltac on_coerce_proof_gl tac :=
+  match goal with
+    [ |- ?T ] => on_coerce_proof tac T
+  end.
+
+Ltac abstract_eq_proof := on_coerce_proof_gl ltac:(fun p => let H := fresh "eqH" in abstract_eq_hyp H p).
+
+Ltac abstract_eq_proofs := repeat abstract_eq_proof.
+
+Ltac pi_eq_proof_hyp p :=
+  let ty := type of p in
+  let tyred := eval simpl in ty in
+  match tyred with
+    ?X = ?Y =>
+    match goal with
+      | [ H : X = Y |- _ ] =>
+        match p with
+          | H => fail 2
+          | _ => rewrite (UIP _ X Y p H)
+        end
+      | _ => fail " No hypothesis with same type "
+    end
+  end.
+
+Ltac pi_eq_proof := on_coerce_proof_gl pi_eq_proof_hyp.
+
+Ltac pi_eq_proofs := repeat pi_eq_proof.
+
+Ltac clear_eq_proofs :=
+  abstract_eq_proofs ; pi_eq_proofs.
+
+Ltac rewrite_refl_id := autorewrite with refl_id.
+
+Ltac clear_eq_ctx :=
+  rewrite_refl_id ; clear_eq_proofs.
+
+Ltac simpl_eqs :=
+  repeat (elim_eq_rect ; simpl ; clear_eq_ctx).
+
+Ltac clear_refl_eq :=
+  match goal with [ H : ?X = ?X |- _ ] => clear H end.
+Ltac clear_refl_eqs := repeat clear_refl_eq.
+
+Ltac simplify_eqs :=
+  simpl ; simpl_eqs ; clear_eq_ctx ; clear_refl_eqs ;
+    try subst ; simpl ; repeat simpl_uip ; rewrite_refl_id.
+
+End Program_Equality.
 
 Open Scope predicate_scope.
 
@@ -146,8 +236,8 @@ Ltac progressive_invert_once H n :=
   | Type => idtac
   end;
   directed inversion H;
-  simplify_eqs;
-  clear_refl_eqs;
+  Program_Equality.simplify_eqs;
+  Program_Equality.clear_refl_eqs;
   clear_dups;
   try mark_with H n.
 
