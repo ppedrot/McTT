@@ -1,5 +1,3 @@
-From Stdlib Require Import List RelationClasses Morphisms.
-
 From Mctt Require Import LibTactics.
 From Mctt.Core Require Import Base.
 From Mctt.Core.Syntactic Require Export Syntax.
@@ -718,16 +716,3 @@ Hint Rewrite -> wf_sub_eq_id_compose_right wf_sub_eq_id_compose_left
 
 #[export]
 Hint Rewrite -> wf_exp_eq_sub_id wf_exp_eq_pi_sub wf_exp_eq_sigma_sub using mauto 4 : mctt.
-
-#[export]
-Instance wf_exp_eq_per_elem Γ T : PERElem _ (wf_exp Γ T) (wf_exp_eq Γ T).
-Proof.
-  intros a Ha. mauto.
-Qed.
-
-
-#[export]
-Instance wf_sub_eq_per_elem Γ Δ : PERElem _ (wf_sub Γ Δ) (wf_sub_eq Γ Δ).
-Proof.
-  intros a Ha. mauto.
-Qed.

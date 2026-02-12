@@ -1,30 +1,4 @@
-From Stdlib Require Import List String.
-
 From Mctt.Core Require Import Base.
-
-(** * Concrete Syntax Tree *)
-Module Cst.
-Inductive obj : Set :=
-| typ : nat -> obj
-| nat : obj
-| zero : obj
-| succ : obj -> obj
-| natrec : obj -> string -> obj -> obj -> string -> string -> obj -> obj
-| pi : string -> obj -> obj -> obj
-| fn : string -> obj -> obj -> obj
-| app : obj -> obj -> obj
-| sigma : string -> obj -> obj -> obj
-| pair : obj -> obj -> obj -> string -> obj -> obj
-| fst : obj -> obj
-| snd : obj -> obj
-| prop_eq : obj -> obj -> obj -> obj
-| refl : obj -> obj -> obj
-| eqrec : obj ->                 (** A : eq domain type *)
-          string -> string -> string -> obj -> (** x y (z : Eq A x y). M *)
-          string -> obj ->                   (** x. Pf : M[x/x, x/y, refl A x/z] *)
-          obj -> obj -> obj -> obj
-| var : string -> obj.
-End Cst.
 
 (** * Abstract Syntac Tree *)
 Reserved Notation "'typ'".
@@ -135,15 +109,6 @@ with ne_to_exp (M : ne) : exp :=
 
 Coercion nf_to_exp : nf >-> exp.
 Coercion ne_to_exp : ne >-> exp.
-
-Fact nf_eq_dec : forall (M M' : nf),
-    ({M = M'} + {M <> M'})%type
-with ne_eq_dec : forall (M M' : ne),
-    ({M = M'} + {M <> M'})%type.
-Proof.
-  all: intros; decide equality;
-    apply PeanoNat.Nat.eq_dec.
-Defined.
 
 Definition q σ := a_extend (a_compose σ a_weaken) (a_var 0).
 Arguments q σ/.
