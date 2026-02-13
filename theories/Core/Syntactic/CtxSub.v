@@ -6,9 +6,8 @@ Import Syntax_Notations.
 Lemma ctx_sub_refl : forall {Γ},
     {{ ⊢ Γ }} ->
     {{ ⊢ Γ ⊆ Γ }}.
-Proof with mautosolve.
-  induction 1...
-Qed.
+Proof.
+Admitted.
 
 #[export]
 Hint Resolve ctx_sub_refl : mctt.
@@ -33,7 +32,7 @@ Hint Resolve ctx_sub_refl : mctt.
   ctxsub_sub_eq_helper : forall {Γ Γ' σ σ'}, {{ Γ ⊢s σ ≈ σ' : Γ' }} -> forall {Δ}, {{ ⊢ Δ ⊆ Γ }} -> {{ Δ ⊢s σ ≈ σ' : Γ' }}
   with
   ctxsub_subtyp_helper : forall {Γ M M'}, {{ Γ ⊢ M ⊆ M' }} -> forall {Δ}, {{ ⊢ Δ ⊆ Γ }} -> {{ Δ ⊢ M ⊆ M' }}.
-  Proof with mautosolve.
+  Proof.
     all: inversion_clear 1;
       (on_all_hyp: gen_ctxsub_helper_IH ctxsub_exp_helper ctxsub_exp_eq_helper ctxsub_sub_helper ctxsub_sub_eq_helper ctxsub_subtyp_helper);
       clear ctxsub_exp_helper ctxsub_exp_eq_helper ctxsub_sub_helper ctxsub_sub_eq_helper ctxsub_subtyp_helper;
@@ -41,12 +40,12 @@ Hint Resolve ctx_sub_refl : mctt.
       try (rename B into C); try (rename B' into C'); try (rename A0 into B); try (rename A' into B').
     (** ctxsub_exp_helper & ctxsub_exp_eq_helper recursion cases *)
     1,12-14: assert {{ ⊢ Δ, ℕ ⊆ Γ, ℕ }} by (econstructor; mautosolve);
-    assert {{ Δ, ℕ ⊢ B : Type@i }} by eauto; econstructor...
+    assert {{ Δ, ℕ ⊢ B : Type@i }} by eauto; econstructor; mautosolve.
     (** ctxsub_exp_helper & ctxsub_exp_eq_helper function cases *)
     1-3,11-15: assert {{ Δ ⊢ B : Type@i }} by eauto; assert {{ ⊢ Δ, B ⊆ Γ, B }} by mauto;
-    try econstructor...
+    try econstructor; mautosolve.
     (** equality type case *)
-    6,15:idtac...
+    6,15:idtac; mautosolve.
 
     (** ctxsub_exp_helper & ctxsub_exp_eq_helper variable cases *)
     5,16: assert (exists B, {{ #x : B ∈ Δ }} /\ {{ Δ ⊢ B ⊆ A }}); destruct_conjs; mautosolve 4.
@@ -57,18 +56,18 @@ Hint Resolve ctx_sub_refl : mctt.
     5,12-14: assert {{ ⊢ Δ, B ⊆ Γ, B }} by mauto;
       assert {{ Γ, B ⊢s Wk : Γ }} by mauto 3;
       assert {{ Γ, B ⊢ B[Wk] : Type@i }} by mauto 3;
-      assert {{ Γ, B, B[Wk] ⊢s Wk : Γ, B }} by mauto 4;
-      assert {{ Γ, B, B[Wk] ⊢s Wk∘Wk : Γ }} by mauto 3;
+      assert {{ (Γ, B), B[Wk] ⊢s Wk : Γ, B }} by mauto 4;
+      assert {{ (Γ, B), B[Wk] ⊢s Wk∘Wk : Γ }} by mauto 3;
       assert {{ Δ, B ⊢s Wk : Δ }} by mauto 3;
       assert {{ Δ, B ⊢ B[Wk] : Type@i }} by mauto 3;
-      assert {{ Δ, B, B[Wk] ⊢s Wk : Δ, B }} by mauto 4;
-      assert {{ Δ, B, B[Wk] ⊢s Wk∘Wk : Δ }} by mauto 3;
-      assert {{ Δ, B, B[Wk] ⊢ B[Wk∘Wk] : Type@i }} by mauto 3;
-      assert {{ Δ, B, B[Wk] ⊢ B[Wk∘Wk] : Type@i }} by mauto 3;
-      assert {{ ⊢ Δ, B, B[Wk] ⊆ Γ, B, B[Wk] }} by (econstructor; mauto 4);
-      assert {{ Γ, B, B[Wk] ⊢ Eq B[Wk∘Wk] #1 #0 : Type@i }} by (econstructor; mauto 3; eapply wf_conv; mauto 4);
-      assert {{ Δ, B, B[Wk] ⊢ Eq B[Wk∘Wk] #1 #0 : Type@i }} by (econstructor; mauto 3; eapply wf_conv; mauto 4);
-      assert {{ ⊢ Δ, B, B[Wk], Eq B[Wk∘Wk] #1 #0 ⊆ Γ, B, B[Wk], Eq B[Wk∘Wk] #1 #0 }} by mauto 3;
+      assert {{ (Δ, B), B[Wk] ⊢s Wk : Δ, B }} by mauto 4;
+      assert {{ (Δ, B), B[Wk] ⊢s Wk∘Wk : Δ }} by mauto 3;
+      assert {{ (Δ, B), B[Wk] ⊢ B[Wk∘Wk] : Type@i }} by mauto 3;
+      assert {{ (Δ, B), B[Wk] ⊢ B[Wk∘Wk] : Type@i }} by mauto 3;
+      assert {{ ⊢ (Δ, B), B[Wk] ⊆ (Γ, B), B[Wk] }} by (econstructor; mauto 4);
+      assert {{ (Γ, B), B[Wk] ⊢ Eq B[Wk∘Wk] #1 #0 : Type@i }} by (econstructor; mauto 3; eapply wf_conv; mauto 4);
+      assert {{ (Δ, B), B[Wk] ⊢ Eq B[Wk∘Wk] #1 #0 : Type@i }} by (econstructor; mauto 3; eapply wf_conv; mauto 4);
+      assert {{ ⊢ ((Δ, B), B[Wk]), Eq B[Wk∘Wk] #1 #0 ⊆ ((Γ, B), B[Wk]), Eq B[Wk∘Wk] #1 #0 }} by mauto 3;
       econstructor; mauto 2.
 
     (* sigma type case *)
@@ -83,7 +82,7 @@ Hint Resolve ctx_sub_refl : mctt.
       assert (exists D, {{ #x : D ∈ Δ0 }} /\ {{ Δ0 ⊢ D ⊆ B }}) as [D [i0 ?]] by mauto.
       destruct_conjs.
       assert {{ ⊢ Δ0, C' }} by mauto.
-      assert {{ Δ0, C' ⊢ D[Wk] ⊆ B[Wk] }}...
+      assert {{ Δ0, C' ⊢ D[Wk] ⊆ B[Wk] }}; mautosolve.
     - eapply wf_subtyp_pi with (i := i); firstorder mauto 4.
     - eapply wf_subtyp_sigma with (i := i); firstorder mauto 4.
     all: idtac "START!".

@@ -34,7 +34,7 @@ with sub : Set :=
 | a_extend : sub -> exp -> sub
 where "'typ'" := exp.
 
-Notation ctx := (list exp).
+Abbreviation ctx := (list exp).
 
 Fixpoint nat_to_exp n : exp :=
   match n with
@@ -125,6 +125,9 @@ Open Scope mctt_scope.
 
 (** ** Syntactic Notations *)
 Module Syntax_Notations.
+
+  Set Warnings "-parsing".
+
   (** We need to define substitution notation first to assert [left associativity] of level 0. *)
   Notation "e [ s ]" := (a_sub e s) (in custom exp at level 0, e custom exp, s custom exp at level 60, left associativity, format "e [ s ]") : mctt_scope.
 

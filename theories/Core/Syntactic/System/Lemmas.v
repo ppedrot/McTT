@@ -342,7 +342,7 @@ Lemma exp_eq_sub_compose_double_weaken_double_extend_typ : forall {Γ σ Δ i A 
     {{ Γ ⊢ M : B[σ] }} ->
     {{ Δ, B ⊢ C : Type@k }} ->
     {{ Γ ⊢ N : C[σ,,M] }} ->
-    {{ Γ ⊢ A[Wk∘Wk][σ,,M,,N] ≈ A[σ] : Type@i }}.
+    {{ Γ ⊢ A[Wk∘Wk][(σ,,M),,N] ≈ A[σ] : Type@i }}.
 Proof.
 Admitted.
 
@@ -355,7 +355,7 @@ Lemma exp_eq_sub_compose_double_weaken_id_double_extend_typ : forall {Γ i A j B
     {{ Γ ⊢ M : B }} ->
     {{ Γ, B ⊢ C : Type@k }} ->
     {{ Γ ⊢ N : C[Id,,M] }} ->
-    {{ Γ ⊢ A[Wk∘Wk][Id,,M,,N] ≈ A : Type@i }}.
+    {{ Γ ⊢ A[Wk∘Wk][(Id,,M),,N] ≈ A : Type@i }}.
 Proof.
 Admitted.
 
@@ -382,7 +382,7 @@ Admitted.
 
 Lemma vlookup_1_typ : forall {Γ i A j},
     {{ Γ, Type@i ⊢ A : Type@j }} ->
-    {{ Γ, Type@i, A ⊢ #1 : Type@i }}.
+    {{ (Γ, Type@i), A ⊢ #1 : Type@i }}.
 Proof.
 Admitted.
 
@@ -571,7 +571,7 @@ Lemma exp_eq_sub_compose_double_weaken_double_extend_nat : forall {Γ σ Δ M i 
     {{ Γ ⊢ N : B[σ] }} ->
     {{ Δ, B ⊢ C : Type@j }} ->
     {{ Γ ⊢ L : C[σ,,N] }} ->
-    {{ Γ ⊢ M[Wk∘Wk][σ,,N,,L] ≈ M[σ] : ℕ }}.
+    {{ Γ ⊢ M[Wk∘Wk][(σ,,N),,L] ≈ M[σ] : ℕ }}.
 Proof.
 Admitted.
 
@@ -584,7 +584,7 @@ Lemma exp_eq_sub_compose_double_weaken_id_double_extend_nat : forall {Γ M i B N
     {{ Γ ⊢ N : B }} ->
     {{ Γ, B ⊢ C : Type@j }} ->
     {{ Γ ⊢ L : C[Id,,N] }} ->
-    {{ Γ ⊢ M[Wk∘Wk][Id,,N,,L] ≈ M : ℕ }}.
+    {{ Γ ⊢ M[Wk∘Wk][(Id,,N),,L] ≈ M : ℕ }}.
 Proof.
 Admitted.
 
@@ -599,7 +599,7 @@ Admitted.
 
 Lemma vlookup_1_nat : forall {Γ A i},
     {{ Γ, ℕ ⊢ A : Type@i }} ->
-    {{ Γ, ℕ, A ⊢ #1 : ℕ }}.
+    {{ (Γ, ℕ), A ⊢ #1 : ℕ }}.
 Proof.
 Admitted.
 
@@ -813,7 +813,7 @@ Hint Resolve sub_q sub_q_typ sub_q_nat : mctt.
 Lemma exp_eq_var_1_sub_q_sigma_nat : forall {Γ A i σ Δ},
     {{ Δ, ℕ ⊢ A : Type@i }} ->
     {{ Γ ⊢s σ : Δ }} ->
-    {{ Γ, ℕ, A[q σ] ⊢ #1[q (q σ)] ≈ #1 : ℕ }}.
+    {{ (Γ, ℕ), A[q σ] ⊢ #1[q (q σ)] ≈ #1 : ℕ }}.
 Proof.
 Admitted.
 
@@ -828,7 +828,7 @@ Admitted.
 
 Lemma sub_weak_compose_weak_extend_succ_var_1 : forall {Γ A i},
     {{ Γ, ℕ ⊢ A : Type@i }} ->
-    {{ Γ, ℕ, A ⊢s Wk∘Wk,,succ #1 : Γ, ℕ }}.
+    {{ (Γ, ℕ), A ⊢s Wk∘Wk,,succ #1 : Γ, ℕ }}.
 Proof.
 Admitted.
 
@@ -896,7 +896,7 @@ Hint Resolve sub_eq_p_q_sigma_nat : mctt.
 Lemma sub_eq_p_p_q_q_sigma_nat : forall {Γ A i σ Δ},
     {{ Δ, ℕ ⊢ A : Type@i }} ->
     {{ Γ ⊢s σ : Δ }} ->
-    {{ Γ, ℕ, A[q σ] ⊢s Wk∘(Wk∘q (q σ)) ≈ (σ∘Wk)∘Wk : Δ }}.
+    {{ (Γ, ℕ), A[q σ] ⊢s Wk∘(Wk∘q (q σ)) ≈ (σ∘Wk)∘Wk : Δ }}.
 Proof.
 Admitted.
 
@@ -906,7 +906,7 @@ Hint Resolve sub_eq_p_p_q_q_sigma_nat : mctt.
 Lemma sub_eq_q_sigma_compose_weak_weak_extend_succ_var_1 : forall {Γ A i σ Δ},
     {{ Δ, ℕ ⊢ A : Type@i }} ->
     {{ Γ ⊢s σ : Δ }} ->
-    {{ Γ, ℕ, A[q σ] ⊢s q σ∘(Wk∘Wk,,succ #1) ≈ (Wk∘Wk,,succ #1)∘q (q σ) : Δ, ℕ }}.
+    {{ (Γ, ℕ), A[q σ] ⊢s q σ∘(Wk∘Wk,,succ #1) ≈ (Wk∘Wk,,succ #1)∘q (q σ) : Δ, ℕ }}.
 Proof.
 Admitted.
 
@@ -982,7 +982,7 @@ Lemma sub_lookup_var0 : forall Δ Γ σ M1 M2 B i,
     {{ Γ ⊢ B : Type@i }} ->
     {{ Δ ⊢ M1 : B[σ] }} ->
     {{ Δ ⊢ M2 : B[σ] }} ->
-    {{ Δ ⊢ #0[σ,,M1,,M2] ≈ M2 : B[σ] }}.
+    {{ Δ ⊢ #0[(σ,,M1),,M2] ≈ M2 : B[σ] }}.
 Proof.
 Admitted.
 
@@ -990,7 +990,7 @@ Lemma id_sub_lookup_var0 : forall Γ M1 M2 B i,
     {{ Γ ⊢ B : Type@i }} ->
     {{ Γ ⊢ M1 : B }} ->
     {{ Γ ⊢ M2 : B }} ->
-    {{ Γ ⊢ #0[Id,,M1,,M2] ≈ M2 : B }}.
+    {{ Γ ⊢ #0[(Id,,M1),,M2] ≈ M2 : B }}.
 Proof.
 Admitted.
 
@@ -999,7 +999,7 @@ Lemma sub_lookup_var1 : forall Δ Γ σ M1 M2 B i,
     {{ Γ ⊢ B : Type@i }} ->
     {{ Δ ⊢ M1 : B[σ] }} ->
     {{ Δ ⊢ M2 : B[σ] }} ->
-    {{ Δ ⊢ #1[σ,,M1,,M2] ≈ M1 : B[σ] }}.
+    {{ Δ ⊢ #1[(σ,,M1),,M2] ≈ M1 : B[σ] }}.
 Proof.
 Admitted.
 
@@ -1007,7 +1007,7 @@ Lemma id_sub_lookup_var1 : forall Γ M1 M2 B i,
     {{ Γ ⊢ B : Type@i }} ->
     {{ Γ ⊢ M1 : B }} ->
     {{ Γ ⊢ M2 : B }} ->
-    {{ Γ ⊢ #1[Id,,M1,,M2] ≈ M1 : B }}.
+    {{ Γ ⊢ #1[(Id,,M1),,M2] ≈ M1 : B }}.
 Proof.
 Admitted.
 
@@ -1015,7 +1015,7 @@ Lemma exp_eq_var_1_sub_q_sigma : forall {Γ A i B j σ Δ},
     {{ Δ ⊢ B : Type@j }} ->
     {{ Δ, B ⊢ A : Type@i }} ->
     {{ Γ ⊢s σ : Δ }} ->
-    {{ Γ, B[σ], A[q σ] ⊢ #1[q (q σ)] ≈ #1 : B[σ][Wk∘Wk] }}.
+    {{ (Γ, B[σ]), A[q σ] ⊢ #1[q (q σ)] ≈ #1 : B[σ][Wk∘Wk] }}.
 Proof.
 Admitted.
 

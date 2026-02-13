@@ -277,7 +277,7 @@ with wf_exp_eq : ctx -> typ -> exp -> exp -> Prop :=
      {{ Δ, A ⊢ B : Type@i }} ->
      {{ Δ ⊢ M : A }} ->
      {{ Δ ⊢ N : B[Id,,M] }} ->
-     {{ Γ ⊢ ⟨ M : A ; N : B ⟩[σ] ≈ ⟨ M[σ] : A[σ] ; N[σ] : B[q σ] ⟩ : (Σ A B)[σ] }} )
+     {{ Γ ⊢ (⟨ M : A ; N : B ⟩)[σ] ≈ ⟨ M[σ] : A[σ] ; N[σ] : B[q σ] ⟩ : (Σ A B)[σ] }} )
 | wf_exp_eq_fst_cong :
   `( {{ Γ ⊢ A : Type@i }} ->
      {{ Γ, A ⊢ B : Type@i }} ->
@@ -311,12 +311,12 @@ with wf_exp_eq : ctx -> typ -> exp -> exp -> Prop :=
      {{ Γ, A ⊢ B : Type@i }} ->
      {{ Γ ⊢ M : A }} ->
      {{ Γ ⊢ N : B[Id,,M] }} ->
-     {{ Γ ⊢ snd ⟨ M : A ; N : B ⟩ ≈ N : B[Id,,M] }} )
+     {{ Γ ⊢ snd (⟨ M : A ; N : B ⟩) ≈ N : B[Id,,M] }} )
 | wf_exp_eq_sigma_eta :
   `( {{ Γ ⊢ A : Type@i }} ->
      {{ Γ, A ⊢ B : Type@i }} ->
      {{ Γ ⊢ M : Σ A B }} ->
-     {{ Γ ⊢ M ≈ ⟨ fst M : A ; snd M : B ⟩ : Σ A B }} )
+     {{ Γ ⊢ M ≈ (⟨ (fst M) : A ; (snd M) : B ⟩) : Σ A B }} )
 
 | wf_exp_eq_eq_sub :
   `( {{ Γ ⊢s σ : Δ }} ->
@@ -639,6 +639,8 @@ Admitted.
 Hint Resolve wf_sub_eq_subtyp' : mctt.
 #[export]
 Remove Hints wf_sub_eq_subtyp : mctt.
+
+Create Rewrite HintDb mctt.
 
 #[export]
 Hint Rewrite -> wf_exp_eq_typ_sub wf_exp_eq_nat_sub wf_exp_eq_eq_sub using mauto 3 : mctt.
